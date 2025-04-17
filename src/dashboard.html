@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FinDash - Dashboard</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+     <header>
+        <nav class="navbar">
+            <a href="index.html" class="logo">FinDash</a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About Us</a></li>
+                <li><a href="products.html">Products & Services</a></li>
+                <li><a href="login.html" id="login-nav-link">Login/SignUp</a></li>
+                 <!-- Dashboard link active here, Logout button visible -->
+                 <li><a href="dashboard.html" id="dashboard-nav-link" class="active" style="display: none;">Dashboard</a></li>
+                 <li><button id="logout-button" style="display: none;">Logout</button></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="main-content page-padding slide-up" id="dashboard-content" >
+         <h1>Welcome to Your Dashboard, <span id="dashboard-username">User</span>!</h1>
+         <p>Here's a quick overview of your financial status.</p>
+
+        <div class="dashboard-grid">
+             <div class="dashboard-widget fade-in" style="animation-delay: 0.2s;">
+                 <h2>Account Summary</h2>
+                 <div class="chart-container-dashboard">
+                    <canvas id="accountSummaryChart"></canvas>
+                 </div>
+             </div>
+             <div class="dashboard-widget fade-in" style="animation-delay: 0.4s;">
+                 <h2>Recent Transactions</h2>
+                 <!-- Placeholder for transactions list or small chart -->
+                 <ul class="transactions-list">
+                     <li><span>+ $1500</span> Salary Deposit</li>
+                     <li><span>- $55.40</span> Grocery Store</li>
+                     <li><span>- $120.00</span> Utility Bill</li>
+                     <li><span>- $35.00</span> Coffee Shop</li>
+                 </ul>
+             </div>
+             <div class="dashboard-widget fade-in" style="animation-delay: 0.6s;">
+                 <h2>Savings Goal Progress</h2>
+                  <div class="chart-container-dashboard">
+                    <canvas id="savingsGoalChart"></canvas>
+                 </div>
+             </div>
+        </div>
+    </main>
+
+     <div id="auth-message" class="auth-required-message" style="display: none;">
+        <h2>Access Denied</h2>
+        <p>You must be logged in to view the dashboard.</p>
+        <a href="login.html" class="cta-button">Login Now</a>
+    </div>
+
+
+    <footer>
+        <p>© 2023 FinDash. All rights reserved.</p>
+    </footer>
+
+    <script src="script.js"></script>
+     <!-- Dashboard Specific Chart Initialization -->
+    <script>
+         document.addEventListener('DOMContentLoaded', () => {
+            // Only initialize charts if the main dashboard content is visible (i.e., user is logged in)
+            if (document.getElementById('dashboard-content').style.display !== 'none') {
+
+                // --- Account Summary Chart (Pie) ---
+                const ctxAccount = document.getElementById('accountSummaryChart')?.getContext('2d');
+                if (ctxAccount) {
+                    new Chart(ctxAccount, {
+                        type: 'pie',
+                        data: {
+                            labels: ['Checking', 'Savings', 'Investments'],
+                            datasets: [{
+                                label: 'Account Balance',
+                                data: [2500, 5000, 11500], // Example Data
+                                backgroundColor: [ // Use CSS variables (approx)
+                                    'rgba(74, 144, 226, 0.8)', // --primary-color
+                                    'rgba(80, 227, 194, 0.8)', // --accent-color
+                                    'rgba(245, 166, 35, 0.8)'  // Orange
+                                ],
+                                borderColor: 'var(--light-bg)', // Use light background for border
+                                borderWidth: 2,
+                                hoverOffset: 4
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: {
+                                    position: 'bottom',
+                                    labels: { padding: 15, color: 'var(--secondary-color)' } // Adjusted padding
+                                },
+                                title: {
+                                    display: true,
+                                    text: 'Total Assets Distribution',
+                                    padding: { top: 10, bottom: 10 }, // Adjusted padding
+                                    font: { size: 15, weight: '600' }, // Adjusted font
+                                    color: 'var(--dark-text)'
+                                },
+                                tooltip: { // Customize tooltips
+                                    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                                    titleFont: { size: 14 },
+                                    bodyFont: { size: 12 },
+                                    padding: 10,
+                                    cornerRadius: 4
+                                }
+                            }
+                        }
+                    });
+                }
+
+                 // --- Savings Goal Chart (Bar - Progress) ---
+                const ctxSavings = document.getElementById('savingsGoalChart')?.getContext('2d');
+                if (ctxSavings) {
+                    const goal = 1000; // Example goal
+                    const current = 650; // Example current savings
+                    new Chart(ctxSavings, {
+                        type: 'bar',
+                        data: {
+                            labels: ['Vacation Fund'],
+                            datasets: [{
+                                label: 'Current Savings ($)',
+                                data: [current],
+                                backgroundColor: 'rgba(74, 144, 226, 0.8)', // Primary color (approx)
+                                borderColor: 'var(--primary-color)',
+                                borderWidth: 1,
+                                borderRadius: 4 // Rounded bars
+                            },{
+                                label: 'Remaining ($)',
+                                data: [Math.max(0, goal - current)],
+                                backgroundColor: 'rgba(224, 224, 224, 0.7)', // Lighter gray for remaining
+                                borderColor: '#ccc',
+                                borderWidth: 1,
+                                borderRadius: 4 // Rounded bars
+                            }]
+                        },
+                        options: {
+                            indexAxis: 'y', // Horizontal Bar
+                            scales: {
+                                x: {
+                                    stacked: true,
+                                    max: goal,
+                                    grid: { display: false }, // Hide grid lines for x-axis
+                                    ticks: { display: false } // Hide ticks for x-axis
+                                },
+                                y: {
+                                    stacked: true,
+                                    grid: { display: false }, // Hide grid lines for y-axis
+                                    ticks: { display: false } // Hide ticks for y-axis
+                                }
+                            },
+                            responsive: true,
+                            plugins: {
+                                legend: { display: false },
+                                title: {
+                                    display: true,
+                                    text: `Savings Goal: $${current} / $${goal}`,
+                                    padding: { top: 10, bottom: 10 },
+                                    font: { size: 15, weight: '600' },
+                                    color: 'var(--dark-text)'
+                                },
+                                tooltip: { enabled: false } // Disable tooltip for this simple bar
+                             }
+                        }
+                    });
+                }
+            }
+        });
+    </script>
+</body>
+</html>

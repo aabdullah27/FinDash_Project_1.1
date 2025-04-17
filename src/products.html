@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FinDash - Products & Services</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <a href="index.html" class="logo">FinDash</a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About Us</a></li>
+                <li><a href="products.html" class="active">Products & Services</a></li>
+                <li><a href="login.html" id="login-nav-link">Login/SignUp</a></li>
+                 <li><a href="dashboard.html" id="dashboard-nav-link" style="display: none;">Dashboard</a></li>
+                 <li><button id="logout-button" style="display: none;">Logout</button></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="main-content page-padding slide-up">
+        <h1>Our Offerings</h1>
+
+        <section class="product-section fade-in" style="animation-delay: 0.2s;">
+            <h2>Personal Finance Tracker</h2>
+            <p>Get a complete overview of your spending habits, income sources, and net worth. Visualize your financial health.</p>
+            <div class="chart-container">
+                 <canvas id="spendingChart"></canvas>
+            </div>
+        </section>
+
+        <section class="product-section fade-in" style="animation-delay: 0.4s;">
+            <h2>Investment Portfolio Analysis</h2>
+            <p>Track your stock, bond, and crypto investments in real-time. Analyze performance and diversification.</p>
+             <div class="chart-container">
+                 <canvas id="investmentChart"></canvas>
+            </div>
+        </section>
+
+        <section class="product-section fade-in" style="animation-delay: 0.6s;">
+            <h2>Budgeting Tools</h2>
+            <p>Create custom budgets, set savings goals, and receive alerts to stay on track.</p>
+            <div class="chart-container">
+                 <canvas id="budgetChart"></canvas>
+            </div>
+        </section>
+
+    </main>
+
+    <footer>
+        <p>© 2023 FinDash. All rights reserved.</p>
+    </footer>
+
+    <script src="script.js"></script>
+     <!-- Chart Initialization Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- Spending Chart (Doughnut) ---
+            const ctxSpending = document.getElementById('spendingChart')?.getContext('2d');
+            if (ctxSpending) {
+                new Chart(ctxSpending, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Groceries', 'Utilities', 'Rent', 'Entertainment', 'Transport'],
+                        datasets: [{
+                            label: 'Spending by Category',
+                            data: [300, 150, 800, 120, 90],
+                            backgroundColor: [ // Use CSS variables (requires helper function or direct values)
+                                'rgba(74, 144, 226, 0.8)', // --primary-color (approx)
+                                'rgba(80, 227, 194, 0.8)', // --accent-color (approx)
+                                'rgba(245, 166, 35, 0.8)', // Orange (example)
+                                'rgba(126, 211, 33, 0.8)', // Green (example)
+                                'rgba(189, 16, 224, 0.8)'  // Purple (example)
+                            ],
+                            borderColor: 'var(--light-bg)', // Use light background for border
+                            borderWidth: 2, // Slightly thicker border
+                            hoverOffset: 4 // Add hover effect
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false, // Allow height control via CSS
+                        plugins: {
+                            legend: {
+                                position: 'bottom', // Move legend below
+                                labels: { padding: 20, color: 'var(--secondary-color)' }
+                             },
+                            title: {
+                                display: true,
+                                text: 'Monthly Spending Breakdown',
+                                padding: { top: 10, bottom: 15 },
+                                font: { size: 16, weight: '600' },
+                                color: 'var(--dark-text)'
+                            },
+                            tooltip: { // Customize tooltips
+                                backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                                titleFont: { size: 14 },
+                                bodyFont: { size: 12 },
+                                padding: 10,
+                                cornerRadius: 4
+                            }
+                        }
+                    }
+                });
+            }
+
+            // --- Investment Chart (Line) ---
+            const ctxInvestment = document.getElementById('investmentChart')?.getContext('2d');
+             if (ctxInvestment) {
+                new Chart(ctxInvestment, {
+                    type: 'line',
+                    data: {
+                        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                        datasets: [{
+                            label: 'Portfolio Value ($)',
+                            data: [10000, 10500, 10300, 11000, 11200, 11500],
+                            borderColor: 'var(--primary-color)', // Use primary color
+                            backgroundColor: 'rgba(74, 144, 226, 0.1)', // Subtle fill
+                            tension: 0.3, // Smoother curve
+                            fill: true, // Enable fill
+                            borderWidth: 2,
+                            pointBackgroundColor: 'var(--primary-color)',
+                            pointBorderColor: 'var(--light-bg)',
+                            pointHoverBackgroundColor: 'var(--light-bg)',
+                            pointHoverBorderColor: 'var(--primary-color)',
+                            pointRadius: 4,
+                            pointHoverRadius: 6
+                        }]
+                    },
+                     options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false }, // Hide legend for single dataset
+                            title: {
+                                display: true,
+                                text: 'Investment Growth Over Time',
+                                padding: { top: 10, bottom: 15 },
+                                font: { size: 16, weight: '600' },
+                                color: 'var(--dark-text)'
+                            },
+                            tooltip: { // Customize tooltips
+                               backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                               titleFont: { size: 14 },
+                               bodyFont: { size: 12 },
+                               padding: 10,
+                               cornerRadius: 4,
+                               displayColors: false // Hide color box in tooltip
+                           }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: false,
+                                grid: { color: 'rgba(0, 0, 0, 0.05)' }, // Lighter grid lines
+                                ticks: { color: 'var(--secondary-color)' }
+                            },
+                            x: {
+                                grid: { display: false }, // Hide vertical grid lines
+                                ticks: { color: 'var(--secondary-color)' }
+                            }
+                        }
+                    }
+                });
+             }
+
+             // --- Budget Chart (Bar) ---
+            const ctxBudget = document.getElementById('budgetChart')?.getContext('2d');
+             if (ctxBudget) {
+                 new Chart(ctxBudget, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Food', 'Savings Goal', 'Travel Fund'],
+                        datasets: [{
+                            label: 'Budgeted ($)',
+                            data: [500, 300, 200],
+                            backgroundColor: 'rgba(74, 144, 226, 0.7)', // Primary color (approx)
+                            borderColor: 'var(--primary-color)',
+                            borderWidth: 1,
+                            borderRadius: 4 // Rounded bars
+                        }, {
+                            label: 'Actual Spent ($)',
+                             data: [450, 300, 150],
+                             backgroundColor: 'rgba(80, 227, 194, 0.7)', // Accent color (approx)
+                             borderColor: 'var(--accent-color)',
+                            borderWidth: 1,
+                            borderRadius: 4 // Rounded bars
+                        }]
+                    },
+                     options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom', // Move legend below
+                                labels: { padding: 20, color: 'var(--secondary-color)' }
+                            },
+                            title: {
+                                display: true,
+                                text: 'Budget vs Actual Spending',
+                                padding: { top: 10, bottom: 15 },
+                                font: { size: 16, weight: '600' },
+                                color: 'var(--dark-text)'
+                            },
+                            tooltip: { // Customize tooltips
+                               backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                               titleFont: { size: 14 },
+                               bodyFont: { size: 12 },
+                               padding: 10,
+                               cornerRadius: 4
+                           }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                grid: { color: 'rgba(0, 0, 0, 0.05)' },
+                                ticks: { color: 'var(--secondary-color)' }
+                            },
+                            x: {
+                                grid: { display: false },
+                                ticks: { color: 'var(--secondary-color)' }
+                            }
+                        }
+                    }
+                });
+             }
+        });
+    </script>
+</body>
+</html>

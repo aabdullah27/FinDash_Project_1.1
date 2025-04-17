@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FinDash - Login / SignUp</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <a href="index.html" class="logo">FinDash</a>
+             <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About Us</a></li>
+                <li><a href="products.html">Products & Services</a></li>
+                <li><a href="login.html" id="login-nav-link" class="active">Login/SignUp</a></li>
+                 <li><a href="dashboard.html" id="dashboard-nav-link" style="display: none;">Dashboard</a></li>
+                 <li><button id="logout-button" style="display: none;">Logout</button></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="main-content page-padding">
+        <div class="login-signup-container slide-up">
+            <!-- Login Form -->
+            <div id="login-form-container">
+                <h2>Login</h2>
+                <form id="login-form">
+                    <div class="form-group">
+                        <label for="login-username">Username:</label>
+                        <input type="text" id="login-username" name="username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="login-password">Password:</label>
+                        <input type="password" id="login-password" name="password" required>
+                    </div>
+                    <button type="submit" class="cta-button">Login</button>
+                    <p class="form-message" id="login-message"></p>
+                </form>
+                <p class="toggle-form">Don't have an account? <a href="#" id="show-signup">Sign Up</a></p>
+            </div>
+
+            <!-- Sign Up Form (Initially Hidden) -->
+            <div id="signup-form-container" style="display: none;">
+                <h2>Sign Up</h2>
+                <form id="signup-form">
+                     <div class="form-group">
+                        <label for="signup-username">Username:</label>
+                        <input type="text" id="signup-username" name="username" required>
+                    </div>
+                     <div class="form-group">
+                        <label for="signup-email">Email:</label>
+                        <input type="email" id="signup-email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signup-password">Password:</label>
+                        <input type="password" id="signup-password" name="password" required>
+                    </div>
+                     <button type="submit" class="cta-button">Sign Up</button>
+                     <p class="form-message" id="signup-message"></p>
+                </form>
+                 <p class="toggle-form">Already have an account? <a href="#" id="show-login">Login</a></p>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>© 2023 FinDash. All rights reserved.</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
