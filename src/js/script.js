@@ -165,37 +165,24 @@ document.addEventListener('DOMContentLoaded', () => {
             if (dashboardContent) dashboardContent.style.display = 'block';
             if (authMessage) authMessage.style.display = 'none';
             if (dashboardUsernameSpan) dashboardUsernameSpan.textContent = loggedInUser; // Display username
-             // Chart initialization will run via the inline script in dashboard.html
-             // only if dashboardContent is visible.
-
-             // --- Dashboard Widget Reveal Animation ---
-             const widgets = document.querySelectorAll('.dashboard-widget');
-             if (widgets.length > 0) {
-                 const observerOptions = {
-                     root: null, // relative to document viewport
-                     rootMargin: '0px',
-                     threshold: 0.1 // trigger when 10% of the item is visible
-                 };
-
-                 const observerCallback = (entries, observer) => {
-                     entries.forEach(entry => {
-                         if (entry.isIntersecting) {
-                             entry.target.classList.add('visible');
-                             observer.unobserve(entry.target); // Stop observing once visible
-                         }
-                     });
-                 };
-
-                 const widgetObserver = new IntersectionObserver(observerCallback, observerOptions);
-                 widgets.forEach(widget => {
-                     widgetObserver.observe(widget);
-                 });
-             }
-
+            
+            // --- Dashboard Animation Control ---
+            const fadeElements = document.querySelectorAll('.fade-in');
+            if (fadeElements.length > 0) {
+                setTimeout(() => {
+                    fadeElements.forEach((element, index) => {
+                        setTimeout(() => {
+                            element.classList.add('visible');
+                        }, 100 * index); // Staggered animation
+                    });
+                }, 300); // Start after page load
+            }
+            
+            // Current date is handled in the dashboard.html script
         } else {
-            // User is NOT logged in, show auth message, hide content
-             if (dashboardContent) dashboardContent.style.display = 'none';
-             if (authMessage) authMessage.style.display = 'block';
+            // User is not logged in, show auth message
+            if (dashboardContent) dashboardContent.style.display = 'none';
+            if (authMessage) authMessage.style.display = 'flex';
         }
     }
 
