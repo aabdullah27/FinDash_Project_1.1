@@ -6,6 +6,7 @@
     <title>FinDash - Login / SignUp</title>
     <link rel="stylesheet" href="css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="icon" href="./public/images/Logo.jpeg" type="image/jpeg">
 </head>
 <body>
@@ -23,54 +24,142 @@
         </nav>
     </header>
 
-    <main class="main-content page-padding">
+    <main class="main-content auth-page">
+        <div class="auth-background">
+            <div class="auth-shapes">
+                <div class="auth-shape auth-shape-1"></div>
+                <div class="auth-shape auth-shape-2"></div>
+                <div class="auth-shape auth-shape-3"></div>
+            </div>
+        </div>
+        
         <div class="login-signup-container slide-up">
+            <div class="auth-welcome">
+                <h1>Welcome to <span class="highlight">FinDash</span></h1>
+                <p>Your personal financial management solution</p>
+            </div>
+            
             <!-- Login Form -->
             <div id="login-form-container">
-                <h2>Login</h2>
+                <h2><i class="fas fa-lock auth-icon"></i> Login</h2>
                 <form id="login-form">
                     <div class="form-group">
-                        <label for="login-username">Username:</label>
-                        <input type="text" id="login-username" name="username" required>
+                        <label for="login-username"><i class="fas fa-user"></i> Username</label>
+                        <input type="text" id="login-username" name="username" placeholder="Enter your username" required>
                     </div>
                     <div class="form-group">
-                        <label for="login-password">Password:</label>
-                        <input type="password" id="login-password" name="password" required>
+                        <label for="login-password"><i class="fas fa-key"></i> Password</label>
+                        <input type="password" id="login-password" name="password" placeholder="Enter your password" required>
+                        <a href="#" class="forgot-password">Forgot password?</a>
                     </div>
-                    <button type="submit" class="cta-button">Login</button>
+                    <div class="form-options">
+                        <label class="remember-me">
+                            <input type="checkbox" name="remember"> Remember me
+                        </label>
+                    </div>
+                    <button type="submit" class="cta-button auth-button">
+                        <i class="fas fa-sign-in-alt"></i> Login
+                    </button>
                     <p class="form-message" id="login-message"></p>
                 </form>
+                <div class="social-login">
+                    <p>Or login with</p>
+                    <div class="social-buttons">
+                        <button class="social-btn google"><i class="fab fa-google"></i></button>
+                        <button class="social-btn facebook"><i class="fab fa-facebook-f"></i></button>
+                        <button class="social-btn apple"><i class="fab fa-apple"></i></button>
+                    </div>
+                </div>
                 <p class="toggle-form">Don't have an account? <a href="#" id="show-signup">Sign Up</a></p>
             </div>
 
             <!-- Sign Up Form (Initially Hidden) -->
             <div id="signup-form-container" style="display: none;">
-                <h2>Sign Up</h2>
+                <h2><i class="fas fa-user-plus auth-icon"></i> Sign Up</h2>
                 <form id="signup-form">
-                     <div class="form-group">
-                        <label for="signup-username">Username:</label>
-                        <input type="text" id="signup-username" name="username" required>
-                    </div>
-                     <div class="form-group">
-                        <label for="signup-email">Email:</label>
-                        <input type="email" id="signup-email" name="email" required>
+                    <div class="form-group">
+                        <label for="signup-username"><i class="fas fa-user"></i> Username</label>
+                        <input type="text" id="signup-username" name="username" placeholder="Choose a username" required>
                     </div>
                     <div class="form-group">
-                        <label for="signup-password">Password:</label>
-                        <input type="password" id="signup-password" name="password" required>
+                        <label for="signup-email"><i class="fas fa-envelope"></i> Email</label>
+                        <input type="email" id="signup-email" name="email" placeholder="Enter your email" required>
                     </div>
-                     <button type="submit" class="cta-button">Sign Up</button>
-                     <p class="form-message" id="signup-message"></p>
+                    <div class="form-group">
+                        <label for="signup-password"><i class="fas fa-key"></i> Password</label>
+                        <input type="password" id="signup-password" name="password" placeholder="Create a password" required>
+                        <div class="password-strength">
+                            <div class="strength-meter"></div>
+                            <span class="strength-text">Password strength</span>
+                        </div>
+                    </div>
+                    <div class="form-options">
+                        <label class="terms-checkbox">
+                            <input type="checkbox" name="terms" required> I agree to the <a href="#">Terms & Conditions</a>
+                        </label>
+                    </div>
+                    <button type="submit" class="cta-button auth-button">
+                        <i class="fas fa-user-plus"></i> Create Account
+                    </button>
+                    <p class="form-message" id="signup-message"></p>
                 </form>
-                 <p class="toggle-form">Already have an account? <a href="#" id="show-login">Login</a></p>
+                <div class="social-login">
+                    <p>Or sign up with</p>
+                    <div class="social-buttons">
+                        <button class="social-btn google"><i class="fab fa-google"></i></button>
+                        <button class="social-btn facebook"><i class="fab fa-facebook-f"></i></button>
+                        <button class="social-btn apple"><i class="fab fa-apple"></i></button>
+                    </div>
+                </div>
+                <p class="toggle-form">Already have an account? <a href="#" id="show-login">Login</a></p>
             </div>
         </div>
     </main>
 
     <footer>
-        <p>© 2023 FinDash. All rights reserved.</p>
+        <div class="footer-content">
+            <div class="footer-logo">
+                <a href="index.html">FinDash</a>
+                <p>Simplifying financial management for everyone</p>
+            </div>
+            <div class="footer-links">
+                <div class="footer-column">
+                    <h3>Company</h3>
+                    <ul>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Press</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Resources</h3>
+                    <ul>
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Legal</h3>
+                    <ul>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="#">Security</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2023 FinDash. All rights reserved.</p>
+            <div class="social-icons">
+                <a href="#"><i class="fab fa-facebook"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-linkedin"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+            </div>
+        </div>
     </footer>
 
-    <script src="script.js"></script>
+    <script src="js/script.js"></script>
 </body>
 </html>
