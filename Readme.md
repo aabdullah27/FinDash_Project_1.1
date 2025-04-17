@@ -1,6 +1,6 @@
 # FinDash - Financial Dashboard Application
 
-![FinDash Logo](src/public/images/Logo.jpeg)
+![FinDash Logo](src/images/Logo.jpeg)
 
 ## Overview
 
