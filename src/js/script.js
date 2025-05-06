@@ -1,256 +1,174 @@
 document.addEventListener('DOMContentLoaded', () => {
-
-    // --- Global Elements ---
+    // --- Authentication Elements ---
     const loginNavLink = document.getElementById('login-nav-link');
     const dashboardNavLink = document.getElementById('dashboard-nav-link');
     const logoutButton = document.getElementById('logout-button');
+    const loggedInUser = sessionStorage.getItem('loggedInUser');
 
-    // --- Check Login Status on Load ---
-    const loggedInUser = sessionStorage.getItem('loggedInUser'); // Use sessionStorage
-
-    if (loggedInUser) {
-        if (loginNavLink) loginNavLink.style.display = 'none';
-        if (dashboardNavLink) dashboardNavLink.style.display = 'inline-block'; // Show dashboard link
-        if (logoutButton) logoutButton.style.display = 'inline-block'; // Show logout button
-    } else {
-        // Ensure dashboard/logout are hidden if not logged in
-        if (dashboardNavLink) dashboardNavLink.style.display = 'none';
-        if (logoutButton) logoutButton.style.display = 'none';
+    // --- Handle Navigation Display ---
+    function updateNavigation() {
+        if (loggedInUser) {
+            loginNavLink && (loginNavLink.style.display = 'none');
+            dashboardNavLink && (dashboardNavLink.style.display = 'inline-block');
+            logoutButton && (logoutButton.style.display = 'inline-block');
+        } else {
+            dashboardNavLink && (dashboardNavLink.style.display = 'none');
+            logoutButton && (logoutButton.style.display = 'none');
+        }
     }
+    
+    updateNavigation();
 
-    // --- Logout Functionality ---
-    if (logoutButton) {
-        logoutButton.addEventListener('click', () => {
-            sessionStorage.removeItem('loggedInUser'); // Clear session storage
-            // Optionally clear relevant local storage if needed, but usually not for logout
-            window.location.href = 'index.html'; // Redirect to home
-        });
-    }
+    // --- Setup Logout ---
+    logoutButton && logoutButton.addEventListener('click', () => {
+        sessionStorage.removeItem('loggedInUser');
+        window.location.href = 'index.html';
+    });
 
+    // --- Handle Current Page ---
+    const currentPage = window.location.pathname.split('/').pop();
 
-    // --- Page Specific Logic ---
-    const currentPage = window.location.pathname.split('/').pop(); // Get the current HTML file name
-
-    // --- Login/Sign Up Page Logic ---
+    // --- Login Page Logic ---
     if (currentPage === 'login.html') {
-        const loginFormContainer = document.getElementById('login-form-container');
-        const signupFormContainer = document.getElementById('signup-form-container');
-        const showSignupLink = document.getElementById('show-signup');
-        const showLoginLink = document.getElementById('show-login');
-
+        setupLoginPage();
+    }
+    
+    // --- Dashboard Logic ---
+    if (currentPage === 'dashboard.html') {
+        setupDashboard();
+    }
+    
+    // --- Update Active Navigation ---
+    highlightCurrentPage();
+    
+    // --- Helper Functions ---
+    
+    function setupLoginPage() {
+        // Get elements
         const loginForm = document.getElementById('login-form');
         const signupForm = document.getElementById('signup-form');
+        const loginContainer = document.getElementById('login-form-container');
+        const signupContainer = document.getElementById('signup-form-container');
+        const showSignup = document.getElementById('show-signup');
+        const showLogin = document.getElementById('show-login');
         const loginMessage = document.getElementById('login-message');
         const signupMessage = document.getElementById('signup-message');
-
-        // Toggle between Login and Sign Up forms
-        if (showSignupLink) {
-            showSignupLink.addEventListener('click', (e) => {
-                e.preventDefault();
-                loginFormContainer.style.display = 'none';
-                signupFormContainer.style.display = 'block';
-                loginMessage.textContent = ''; // Clear messages
-                signupMessage.textContent = '';
-            });
-        }
-         if (showLoginLink) {
-            showLoginLink.addEventListener('click', (e) => {
-                e.preventDefault();
-                loginFormContainer.style.display = 'block';
-                signupFormContainer.style.display = 'none';
-                 loginMessage.textContent = ''; // Clear messages
-                 signupMessage.textContent = '';
-            });
-        }
-
-        // Sign Up Form Submission
-        if (signupForm) {
-            signupForm.addEventListener('submit', (e) => {
-                e.preventDefault(); // Prevent actual form submission
-                const username = document.getElementById('signup-username').value.trim();
-                const email = document.getElementById('signup-email').value.trim();
-                const password = document.getElementById('signup-password').value;
-
-                signupMessage.textContent = ''; // Clear previous messages
-                signupMessage.classList.remove('success', 'error');
-
-                if (!username || !email || !password) {
-                    signupMessage.textContent = 'Please fill in all fields.';
-                    signupMessage.classList.add('error');
-                    return;
-                }
-                 if (password.length < 6) {
-                    signupMessage.textContent = 'Password must be at least 6 characters long.';
-                    signupMessage.classList.add('error');
-                    return;
-                }
-
-                // Check if username already exists in Local Storage
-                if (localStorage.getItem(username)) {
-                    signupMessage.textContent = 'Username already exists. Please choose another.';
-                    signupMessage.classList.add('error');
-                } else {
-                    // Store user data (username as key, object with email/password as value)
-                    const userData = { email: email, password: password }; // In a real app, hash the password!
-                    localStorage.setItem(username, JSON.stringify(userData));
-
-                    signupMessage.textContent = 'Sign up successful! You can now log in.';
-                    signupMessage.classList.add('success');
-                    signupForm.reset(); // Clear the form
-
-                    // Optionally switch to login form after successful signup
-                     setTimeout(() => {
-                         loginFormContainer.style.display = 'block';
-                         signupFormContainer.style.display = 'none';
-                         signupMessage.textContent = '';
-                     }, 2000); // Switch after 2 seconds
-                }
-            });
-        }
-
-        // Login Form Submission
-        if (loginForm) {
-            loginForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                const username = document.getElementById('login-username').value.trim();
-                const password = document.getElementById('login-password').value;
-
-                loginMessage.textContent = ''; // Clear previous messages
-                loginMessage.classList.remove('success', 'error');
-
-                 if (!username || !password) {
-                    loginMessage.textContent = 'Please enter username and password.';
-                    loginMessage.classList.add('error');
-                    return;
-                }
-
-                // Retrieve user data from Local Storage
-                const storedUserDataString = localStorage.getItem(username);
-
-                if (storedUserDataString) {
-                    const storedUserData = JSON.parse(storedUserDataString);
-                    // IMPORTANT: Compare plain text passwords - NEVER do this in production! Hash passwords.
-                    if (storedUserData.password === password) {
-                        loginMessage.textContent = 'Login successful! Redirecting...';
-                        loginMessage.classList.add('success');
-
-                        // Set logged-in status using Session Storage
-                        sessionStorage.setItem('loggedInUser', username);
-
-                        // Redirect to dashboard after a short delay
-                        setTimeout(() => {
-                            window.location.href = 'dashboard.html';
-                        }, 1000);
-
-                    } else {
-                        loginMessage.textContent = 'Incorrect password.';
-                        loginMessage.classList.add('error');
-                    }
-                } else {
-                    loginMessage.textContent = 'Username not found.';
-                    loginMessage.classList.add('error');
-                }
-            });
-        }
-    }
-
-    // --- Dashboard Page Logic ---
-    if (currentPage === 'dashboard.html') {
-        const dashboardContent = document.getElementById('dashboard-content');
-        const authMessage = document.getElementById('auth-message');
-        const dashboardUsernameSpan = document.getElementById('dashboard-username');
-
-        if (loggedInUser) {
-            // User is logged in, show dashboard content
-            if (dashboardContent) dashboardContent.style.display = 'block';
-            if (authMessage) authMessage.style.display = 'none';
-            if (dashboardUsernameSpan) dashboardUsernameSpan.textContent = loggedInUser; // Display username
+        
+        // Form toggle buttons
+        showSignup && showSignup.addEventListener('click', (e) => {
+            e.preventDefault();
+            loginContainer.style.display = 'none';
+            signupContainer.style.display = 'block';
+            loginMessage.textContent = '';
+        });
+        
+        showLogin && showLogin.addEventListener('click', (e) => {
+            e.preventDefault();
+            loginContainer.style.display = 'block';
+            signupContainer.style.display = 'none';
+            signupMessage.textContent = '';
+        });
+        
+        // Signup form
+        signupForm && signupForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const username = document.getElementById('signup-username').value.trim();
+            const email = document.getElementById('signup-email').value.trim();
+            const password = document.getElementById('signup-password').value;
             
-            // --- Dashboard Animation Control ---
-            const fadeElements = document.querySelectorAll('.fade-in');
-            if (fadeElements.length > 0) {
-                setTimeout(() => {
-                    fadeElements.forEach((element, index) => {
-                        setTimeout(() => {
-                            element.classList.add('visible');
-                        }, 100 * index); // Staggered animation
-                    });
-                }, 300); // Start after page load
+            // Validate
+            if (!username || !email || !password) {
+                showMessage(signupMessage, 'Please fill in all fields.', 'error');
+                return;
             }
             
-            // Current date is handled in the dashboard.html script
-        } else {
-            // User is not logged in, show auth message
-            if (dashboardContent) dashboardContent.style.display = 'none';
-            if (authMessage) authMessage.style.display = 'flex';
-        }
-    }
-
-
-    // --- Active Navigation Link Highlighting ---
-    const navLinks = document.querySelectorAll('.nav-links a');
-    const currentPath = window.location.pathname;
-
-    navLinks.forEach(link => {
-        // Normalize paths for comparison (remove trailing slash if present)
-        const linkPath = new URL(link.href).pathname;
-        const normalizedCurrentPath = currentPath.endsWith('/') ? currentPath.slice(0, -1) : currentPath;
-        const normalizedLinkPath = linkPath.endsWith('/') ? linkPath.slice(0, -1) : linkPath;
-
-         // Check if the current page path ends with the link's path segment
-         // Handles cases like /folder/index.html matching index.html link
-         // Ensure it's not just matching the root "/"
-         const linkFileName = normalizedLinkPath.split('/').pop();
-         if (linkFileName && normalizedCurrentPath.endsWith(linkFileName)) {
-             // Remove active class from all links first
-             navLinks.forEach(l => l.classList.remove('active'));
-             // Add active class to the matching link
-             link.classList.add('active');
-         } else if (normalizedLinkPath === '/' && (normalizedCurrentPath === '/' || normalizedCurrentPath.endsWith('/index.html'))) {
-             // Special case for root matching index.html or just /
-             navLinks.forEach(l => l.classList.remove('active'));
-             link.classList.add('active');
-         }
-         else {
-             // Only remove active if it wasn't matched above
-             if (!link.classList.contains('active')) {
-                link.classList.remove('active');
-             }
-         }
-    });
-    // Re-apply active specifically for login/dashboard if they were hidden/shown
-    if (loggedInUser) {
-        if(dashboardNavLink && currentPath.includes('dashboard.html')) {
-             navLinks.forEach(l => l.classList.remove('active')); // Clear others first
-             dashboardNavLink.classList.add('active');
-        }
-        if(loginNavLink) loginNavLink.classList.remove('active');
-    } else {
-         if(loginNavLink && currentPath.includes('login.html')) {
-             navLinks.forEach(l => l.classList.remove('active')); // Clear others first
-             loginNavLink.classList.add('active');
-         }
-         if(dashboardNavLink) dashboardNavLink.classList.remove('active');
-    }
-    // Ensure Home is active if no other match and on index.html
-    const isActiveSet = Array.from(navLinks).some(l => l.classList.contains('active'));
-    if (!isActiveSet && (currentPath === '/' || currentPath.endsWith('/index.html'))) {
-        const homeLink = document.querySelector('.nav-links a[href="index.html"]');
-        if (homeLink) {
-            navLinks.forEach(l => l.classList.remove('active')); // Clear others first
-            homeLink.classList.add('active');
-        }
-    }
-
-
-    // --- Hero Parallax Effect ---
-    const hero = document.querySelector('.hero');
-    if (hero) {
-        window.addEventListener('scroll', () => {
-            const scrollPosition = window.pageYOffset;
-            // Adjust the '0.3' factor to control the speed of the parallax effect
-            hero.style.backgroundPositionY = `${scrollPosition * 0.3}px`;
+            if (localStorage.getItem(username)) {
+                showMessage(signupMessage, 'Username already exists.', 'error');
+                return;
+            }
+            
+            // Save user
+            localStorage.setItem(username, JSON.stringify({ email, password }));
+            showMessage(signupMessage, 'Account created! You can now log in.', 'success');
+            signupForm.reset();
+            
+            // Switch to login
+            setTimeout(() => {
+                loginContainer.style.display = 'block';
+                signupContainer.style.display = 'none';
+            }, 1500);
+        });
+        
+        // Login form
+        loginForm && loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const username = document.getElementById('login-username').value.trim();
+            const password = document.getElementById('login-password').value;
+            
+            // Validate
+            if (!username || !password) {
+                showMessage(loginMessage, 'Please enter username and password.', 'error');
+                return;
+            }
+            
+            // Check user
+            const userData = localStorage.getItem(username);
+            if (!userData) {
+                showMessage(loginMessage, 'Username not found.', 'error');
+                return;
+            }
+            
+            // Verify password
+            const user = JSON.parse(userData);
+            if (user.password === password) {
+                sessionStorage.setItem('loggedInUser', username);
+                showMessage(loginMessage, 'Login successful!', 'success');
+                
+                setTimeout(() => {
+                    window.location.href = 'dashboard.html';
+                }, 1000);
+            } else {
+                showMessage(loginMessage, 'Incorrect password.', 'error');
+            }
         });
     }
-
+    
+    function setupDashboard() {
+        const content = document.getElementById('dashboard-content');
+        const authMessage = document.getElementById('auth-message');
+        const usernameSpan = document.getElementById('dashboard-username');
+        
+        if (loggedInUser) {
+            content && (content.style.display = 'block');
+            authMessage && (authMessage.style.display = 'none');
+            usernameSpan && (usernameSpan.textContent = loggedInUser);
+        } else {
+            content && (content.style.display = 'none');
+            authMessage && (authMessage.style.display = 'flex');
+        }
+    }
+    
+    function highlightCurrentPage() {
+        const navLinks = document.querySelectorAll('.nav-links a');
+        
+        navLinks.forEach(link => {
+            link.classList.remove('active');
+            
+            // Check if link matches current page
+            if (link.href.includes(currentPage)) {
+                link.classList.add('active');
+            }
+            
+            // Special case for home page
+            if ((currentPage === '' || currentPage === 'index.html') && 
+                link.href.includes('index.html')) {
+                link.classList.add('active');
+            }
+        });
+    }
+    
+    function showMessage(element, message, type) {
+        element.textContent = message;
+        element.className = `form-message ${type}`;
+    }
 });
