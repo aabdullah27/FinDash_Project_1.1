@@ -215,12 +215,6 @@ header {
 .hero-image img {
     border-radius: 12px;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-    transform: perspective(1000px) rotateY(-5deg);
-    transition: transform 0.5s ease;
-}
-
-.hero-image img:hover {
-    transform: perspective(1000px) rotateY(0deg);
 }
 
 .hero h1 {
@@ -275,7 +269,6 @@ header {
     font-weight: 500;
     text-decoration: none;
     cursor: pointer;
-    transition: all 0.3s ease;
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
@@ -340,12 +333,8 @@ header {
 }
 
 @keyframes float {
-    0%, 100% {
-        transform: translateY(0) scale(1);
-    }
-    50% {
-        transform: translateY(20px) scale(1.05);
-    }
+    0% { transform: none; }
+    100% { transform: none; }
 }
 
 /* --- Enhanced Features Section --- */
@@ -1476,55 +1465,33 @@ footer {
 }
 
 @keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    0% { opacity: 1; }
+    100% { opacity: 1; }
 }
 
 /* Animation Classes */
 .fade-in {
-    opacity: 0;
-    transform: translateY(30px);
-    animation: fadeIn 0.8s ease-out forwards;
+    opacity: 1;
+    transform: none;
+    animation: none;
 }
 
 .slide-in-left {
-    opacity: 0;
-    transform: translateX(-50px);
-    animation: slideInLeft 0.8s ease-out forwards;
-}
-
-@keyframes slideInLeft {
-    from {
-        opacity: 0;
-        transform: translateX(-50px);
-    }
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
+    opacity: 1;
+    transform: none;
+    animation: none;
 }
 
 .zoom-in {
-    opacity: 0;
-    transform: scale(0.8);
-    animation: zoomIn 0.8s ease-out forwards;
+    opacity: 1;
+    transform: none;
+    animation: none;
 }
 
-@keyframes zoomIn {
-    from {
-        opacity: 0;
-        transform: scale(0.8);
-    }
-    to {
-        opacity: 1;
-        transform: scale(1);
-    }
+.slide-up {
+    opacity: 1;
+    transform: none;
+    animation: none;
 }
 
 .pulse {
@@ -1532,18 +1499,8 @@ footer {
 }
 
 @keyframes pulse {
-    0% {
-        transform: scale(1);
-        box-shadow: 0 4px 10px rgba(80, 227, 194, 0.3);
-    }
-    50% {
-        transform: scale(1.05);
-        box-shadow: 0 8px 20px rgba(80, 227, 194, 0.5);
-    }
-    100% {
-        transform: scale(1);
-        box-shadow: 0 4px 10px rgba(80, 227, 194, 0.3);
-    }
+    0% { transform: none; box-shadow: 0 4px 10px rgba(80, 227, 194, 0.3); }
+    100% { transform: none; box-shadow: 0 4px 10px rgba(80, 227, 194, 0.3); }
 }
 
 .team-grid {
@@ -2247,10 +2204,11 @@ input:checked + .slider:before {
 
 .pricing-card {
     background-color: var(--light-bg);
-    border-radius: 12px;
-    box-shadow: var(--shadow);
     border: 1px solid var(--border-color);
-    padding: 2.5rem;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    min-width: 280px;
     max-width: 350px;
     width: 100%;
     text-align: left;
@@ -2258,18 +2216,20 @@ input:checked + .slider:before {
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
+/* Removing hover effect */
 .pricing-card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    transform: none;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
 }
 
 .pricing-card.popular {
     border-color: var(--accent-color);
-    transform: scale(1.05);
+    transform: none;
 }
 
+/* Removing hover effect for popular card */
 .pricing-card.popular:hover {
-    transform: scale(1.05) translateY(-10px);
+    transform: none;
 }
 
 .popular-badge {
@@ -2339,6 +2299,36 @@ input:checked + .slider:before {
 .pricing-cta {
     width: 100%;
     text-align: center;
+    display: inline-block;
+    padding: 0.9rem 1.5rem;
+    border-radius: 30px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    margin-top: 1rem;
+}
+
+.pricing-cta.secondary-button {
+    background-color: rgba(74, 144, 226, 0.1);
+    color: var(--primary-color);
+    border: 1px solid var(--primary-color);
+}
+
+.pricing-cta.secondary-button:hover {
+    background-color: rgba(74, 144, 226, 0.2);
+    color: var(--primary-color);
+}
+
+.pricing-cta.cta-button {
+    background-color: var(--accent-color);
+    color: var(--dark-text);
+    border: none;
+}
+
+.pricing-cta.cta-button:hover {
+    background-color: #48d1b3;
+    color: var(--dark-text);
 }
 
 /* FAQ Section */
@@ -2428,7 +2418,7 @@ input:checked + .slider:before {
     }
     
     .pricing-card.popular:hover {
-        transform: translateY(-10px);
+        transform: none;
     }
     
     .products-hero h1 {
@@ -2787,14 +2777,14 @@ input:checked + .slider:before {
 }
 
 .fade-in {
-    opacity: 0;
-    transform: translateY(20px);
-    transition: opacity 0.5s ease, transform 0.5s ease;
+    opacity: 1;
+    transform: none;
+    animation: none;
 }
 
 .fade-in.visible {
     opacity: 1;
-    transform: translateY(0);
+    transform: none;
 }
 
 @media (max-width: 768px) {
@@ -2815,4 +2805,70 @@ input:checked + .slider:before {
         flex-direction: column;
         align-items: flex-start;
     }
+}
+
+/* Remove hover transformations for all elements */
+.feature-box:hover,
+.step-item:hover,
+.testimonial-item:hover,
+.value-item:hover,
+.team-member:hover,
+.team-member:hover .member-image img,
+.dashboard-card:hover,
+.product-section:hover,
+.stat-card:hover,
+.platform-badge:hover,
+.social-icon:hover,
+.social-btn:hover,
+.view-all:hover,
+.device-image,
+.device-image:hover,
+.cta-button:hover,
+.hero-image img,
+.hero-image img:hover {
+    transform: none !important;
+    box-shadow: var(--shadow) !important;
+}
+
+/* Remove all animation delays */
+[style*="animation-delay"] {
+    animation-delay: 0s !important;
+    animation: none !important;
+}
+
+/* Stop animations */
+.pulse {
+    animation: none !important;
+}
+
+/* Replace fade-in.visible with simpler properties */
+.fade-in.visible {
+    opacity: 1;
+    transform: none;
+}
+
+/* Ensure all elements are fully visible */
+.feature-icon-circle,
+.feature-box:hover .feature-icon-circle,
+.product-cta i,
+.product-cta:hover i,
+.learn-more i,
+.learn-more:hover i,
+.secondary-button i,
+.secondary-button:hover i,
+.view-all i,
+.view-all:hover i {
+    transform: none !important;
+}
+
+/* Remove animation classes for shapes */
+.shape,
+.shape-1,
+.shape-2,
+.shape-3,
+.auth-shape,
+.auth-shape-1,
+.auth-shape-2,
+.auth-shape-3 {
+    animation: none !important;
 }
